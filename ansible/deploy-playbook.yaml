@@ -1,5 +1,5 @@
 ---
-- name: Deploy Container to QA server
+- name: Deploy Container to Kubernetes
   hosts: kubernetes
   remote_user: devopsadmin
   become: true
@@ -10,7 +10,7 @@
   tasks:
     - name: create the deployment
       shell: |
-        cd cicd-pipeline-train-schedule-autodeploy
+        cd ../
         kubectl apply -f .\train-schedule-kube.yml
     # - name: create the service
     #   shell: |
