@@ -13,7 +13,7 @@ pipeline {
         stage('Clone Git Repo') {
             steps {
                 git(
-                    url: 'https://github.com/dashshishir/projCert.git',
+                    url: 'https://github.com/dashshishir/cicd-pipeline-train-schedule-autodeploy.git',
                     branch: 'master'
                 )
             }
