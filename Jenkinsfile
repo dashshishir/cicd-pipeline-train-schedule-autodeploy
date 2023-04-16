@@ -1,77 +1,43 @@
 pipeline {
-    agent any
-    environment {
-        //be sure to replace "bhavukm" with your own Docker Hub username
-        DOCKER_IMAGE_NAME = "bhavukm/train-schedule"
+    agent {
+      label 'javaslave1'
     }
+    environment {
+        DOCKER_REGISTRY = "docker.io"
+        DOCKERHUB_REPO = "dashshishir/devopsedu"
+        DOCKER_IMAGE_TAG = "latest"
+        DOCKERHUB_CREDENTIALS_ID = "docker-hub"
+    }
+    
     stages {
-        stage('Build') {
+        stage('Clone Git Repo') {
             steps {
-                echo 'Running build automation'
-                sh './gradlew build --no-daemon'
-                archiveArtifacts artifacts: 'dist/trainSchedule.zip'
-            }
-        }
-        stage('Build Docker Image') {
-            when {
-                branch 'master'
-            }
-            steps {
-                script {
-                    app = docker.build(DOCKER_IMAGE_NAME)
-                    app.inside {
-                        sh 'echo Hello, World!'
-                    }
-                }
-            }
-        }
-        stage('Push Docker Image') {
-            when {
-                branch 'master'
-            }
-            steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
-                    }
-                }
-            }
-        }
-        stage('CanaryDeploy') {
-            when {
-                branch 'master'
-            }
-            environment { 
-                CANARY_REPLICAS = 1
-            }
-            steps {
-                kubernetesDeploy(
-                    kubeconfigId: 'kubeconfig',
-                    configs: 'train-schedule-kube-canary.yml',
-                    enableConfigSubstitution: true
+                git(
+                    url: 'https://github.com/dashshishir/projCert.git',
+                    branch: 'master'
                 )
             }
         }
-        stage('DeployToProduction') {
-            when {
-                branch 'master'
-            }
-            environment { 
-                CANARY_REPLICAS = 0
-            }
+
+        stage('Build'){
+          steps {
+            sh 'docker build -t ${DOCKER_REGISTRY}/${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG} .'
+          }
+        }
+        stage('Push') {
+          steps {
+            withCredentials([usernamePassword(credentialsId: DOCKERHUB_CREDENTIALS_ID, usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_ACCESS_TOKEN')]) {
+                    sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_ACCESS_TOKEN} ${DOCKER_REGISTRY}"
+                    sh "docker push ${DOCKER_REGISTRY}/${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG}"
+                }
+          }
+        }
+        stage('Deploy to Kubernetes Cluster') {
             steps {
-                input 'Deploy to Production?'
-                milestone(1)
-                kubernetesDeploy(
-                    kubeconfigId: 'kubeconfig',
-                    configs: 'train-schedule-kube-canary.yml',
-                    enableConfigSubstitution: true
-                )
-                kubernetesDeploy(
-                    kubeconfigId: 'kubeconfig',
-                    configs: 'train-schedule-kube.yml',
-                    enableConfigSubstitution: true
+                ansiblePlaybook(
+                    playbook: 'ansible/deploy-playbook.yaml',
+                    become: true,
+                    colorized: true
                 )
             }
         }

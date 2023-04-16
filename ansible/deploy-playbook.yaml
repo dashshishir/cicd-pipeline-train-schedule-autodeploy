@@ -1,0 +1,16 @@
+---
+- name: Deploy Container to QA server
+  hosts: kubernetes
+  remote_user: devopsadmin
+  become: true
+  vars: 
+    docker_registry: docker.io
+    dockerhub_repo: dashshishir/devopsedu
+    docker_image_tag: latest
+  tasks:
+    - name: create the deployment
+      shell: |
+        kubectl apply -f .\kubernetes\deployment.yaml
+    - name: create the service
+      shell: |
+        kubectl apply -f .\kubernetes\service.yaml
