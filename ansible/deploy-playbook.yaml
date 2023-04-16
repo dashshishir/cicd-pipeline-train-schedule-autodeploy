@@ -10,7 +10,7 @@
   tasks:
     - name: create the deployment
       shell: |
-        kubectl apply -f .\kubernetes\deployment.yaml
-    - name: create the service
-      shell: |
-        kubectl apply -f .\kubernetes\service.yaml
+        kubectl apply -f .\train-schedule-kube.yml
+    # - name: create the service
+    #   shell: |
+    #     kubectl apply -f .\kubernetes\service.yaml
