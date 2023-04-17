@@ -11,7 +11,7 @@
     - name: create the deployment
       shell: |
         pwd
-        kubectl apply -f train-schedule-kube.yml
+        kubectl apply -f ./home/devopsadmin/workspace/cicd-train-schedule-app/ansible/deploy-playbook.yaml
     # - name: create the service
     #   shell: |
     #     kubectl apply -f .\kubernetes\service.yaml
