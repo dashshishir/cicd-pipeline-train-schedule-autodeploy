@@ -10,6 +10,7 @@
   tasks:
     - name: create the deployment
       shell: |
+        pwd
         kubectl apply -f train-schedule-kube.yml
     # - name: create the service
     #   shell: |
