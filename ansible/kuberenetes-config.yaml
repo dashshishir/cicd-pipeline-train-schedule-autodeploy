@@ -1,9 +1,0 @@
----
-- name: Deploy Container to Kubernetes
-  hosts: kubernetes
-  remote_user: devopsadmin
-  become: true
-  tasks:
-    - name: ping
-      shell: |
-        ansible kubernetes-master -m ping
