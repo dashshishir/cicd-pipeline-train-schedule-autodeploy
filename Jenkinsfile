@@ -34,7 +34,7 @@ pipeline {
         }
         stage('Deploy to Kubernetes Cluster') {
             steps {
-                sh 'kubectl apply -f ./cicd-train-schedule-app/train-schedule-kube.yml'
+                sh 'kubectl apply -f ./train-schedule-kube.yml'
             }
         }
     }
