@@ -10,4 +10,4 @@
   tasks:
     - name: create the deployment
       shell: |
-        kubectl apply -f ./kubenetes/train-schedule-kube.yml
+        kubectl apply -f ./cicd-train-schedule-app/train-schedule-kube.yml
