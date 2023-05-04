@@ -1,6 +1,6 @@
 ---
 - name: Deploy Container to Kubernetes
-  hosts: kubernetes
+  hosts: kubernetes-master
   remote_user: devopsadmin
   become: true
   vars: 
@@ -8,14 +8,6 @@
     dockerhub_repo: dashshishir/devopsedu
     docker_image_tag: latest
   tasks:
-    - name: Copy YAML file
-      copy:
-        src: /home/devopsadmin/workspace/cicd-train-schedule-app/train-schedule-kube.yml
-        dest: /kubenetes
     - name: create the deployment
       shell: |
-        pwd
-        kubectl apply -f ./kubenetes/train-schedule-kube.yml
-    # - name: create the service
-    #   shell: |
-    #     kubectl apply -f .\kubernetes\service.yaml
+        kubectl get nodes
