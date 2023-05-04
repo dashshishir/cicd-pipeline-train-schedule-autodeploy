@@ -34,11 +34,7 @@ pipeline {
         }
         stage('Deploy to Kubernetes Cluster') {
             steps {
-                ansiblePlaybook(
-                    playbook: 'ansible/deploy-playbook.yaml',
-                    become: true,
-                    colorized: true
-                )
+                sh kubectl apply -f ./train-schedule-kube.yml
             }
         }
     }
