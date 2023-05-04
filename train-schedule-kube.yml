@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
       - name: train-schedule
-        image: $DOCKER_REGISTRY/$DOCKERHUB_REPO:$DOCKER_IMAGE_TAG
+        image: dashshishir/devopsedu:latest
         ports:
         - containerPort: 8080
         livenessProbe:
