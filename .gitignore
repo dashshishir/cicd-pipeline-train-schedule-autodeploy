@@ -5,3 +5,4 @@ dist
 /terraform/terraform.tfstate
 /terraform/terraform.tfstate.backup
 Jenkins-Edureka.pem
+/screenshot
